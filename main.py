@@ -21,6 +21,8 @@ class FFmpeg(object):
         output = os.path.join(self.path, "cover.mp4")
         cmd = [
             "ffmpeg",
+            "-loglevel",
+            "error",
             "-loop",
             "1",
             "-r",
@@ -107,6 +109,8 @@ class FFmpeg(object):
         output = os.path.join(self.path, file_output)
         cmd = [
             "ffmpeg",
+            "-loglevel",
+            "error",
             "-framerate",
             f"1/{audio['seconds']+0.3}",
             "-i",
@@ -125,14 +129,16 @@ class FFmpeg(object):
 
     def concat_videos(self, file_output):
         cmd = [
-            'ffmpeg',
-            '-f',
-            'concat',
-            '-i',
+            "ffmpeg",
+            "-loglevel",
+            "error",
+            "-f",
+            "concat",
+            "-i",
             self.file_list,
-            '-safe',
-            '0',
-            '-y',
+            "-safe",
+            "0",
+            "-y",
             file_output,
         ]
         subprocess.call(cmd, shell=False)
