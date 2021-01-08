@@ -1,0 +1,10 @@
+-i https://mirrors.cloud.tencent.com/pypi/simple
+python-language-server[all]
+pyls-isort
+pyls-mypy
+pyls-black
+flake8
+yapf
+autoflake
+importmagic
+epc

@@ -7,10 +7,21 @@ init: ## setup virtualenv
 	@$(MAKE) log.info MSG="init virtualenv"
 	@$(MAKE) dev-remove-venv
 	@${PYTHON} -m venv .venv
-	@. .venv/bin/activate
+	@$(MAKE) activate
 	@${PIP} install -i https://mirrors.cloud.tencent.com/pypi/simple --upgrade pip
-	@${PIP} install -i https://mirrors.cloud.tencent.com/pypi/simple -r requirements.txt
-	@$(deactivate)
+	@${PIP} install -r requirements.txt
+
+.PHONY: run
+run: ## run main.py
+	@$(MAKE) log.info MSG="running"
+	@$(MAKE) activate
+	@${PYTHON} main.py
+
+
+.PHONY: activate
+activate:
+	@. .venv/bin/activate
+
 
 .PHONY: dev-remove-venv
 dev-remove-venv:
