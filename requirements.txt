@@ -4,7 +4,7 @@ pyls-isort
 pyls-mypy
 pyls-black
 flake8
-yapf
 autoflake
 importmagic
 epc
+black
