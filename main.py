@@ -8,6 +8,7 @@ class FFmpeg(object):
     """
     ffmpeg object
     """
+
     def __init__(self):
         self.path = tempfile.mkdtemp()
         self.file_list = os.path.join(self.path, "file_list.txt")
@@ -51,10 +52,12 @@ class FFmpeg(object):
         add an audio to queue
         """
         seconds = self.get_length(file_audio)
-        self.parts[-1]["audios"].append({
-            "file": file_audio,
-            "seconds": seconds,
-        })
+        self.parts[-1]["audios"].append(
+            {
+                "file": file_audio,
+                "seconds": seconds,
+            }
+        )
 
     def add_silence(self, seconds=1):
         """
@@ -79,7 +82,10 @@ class FFmpeg(object):
                     file_in,
                 ],
                 stdout=subprocess.PIPE,
-            ).stdout.decode("utf-8").replace('"', ""))
+            )
+            .stdout.decode("utf-8")
+            .replace('"', "")
+        )
         return length
 
     def generate(self, file_output):
