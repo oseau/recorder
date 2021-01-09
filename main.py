@@ -1,10 +1,13 @@
+"""
+ffmpeg wrapper
+"""
 import os
 import shutil
 import subprocess
 import tempfile
 
 
-class FFmpeg(object):
+class FFmpeg:
     """
     ffmpeg object
     """
@@ -38,8 +41,8 @@ class FFmpeg(object):
             output,
         ]
         subprocess.call(cmd, shell=False)
-        with open(self.file_list, "w") as fp:
-            print("file 'cover.mp4'", file=fp)
+        with open(self.file_list, "w") as file_list:
+            print("file 'cover.mp4'", file=file_list)
 
     def add_image(self, file_image):
         """
@@ -65,7 +68,8 @@ class FFmpeg(object):
         """
         self.parts[-1]["silence"] = seconds
 
-    def get_length(self, file_in):
+    @staticmethod
+    def get_length(file_in):
         """
         get the length of file_in in seconds
         """
@@ -82,6 +86,7 @@ class FFmpeg(object):
                     file_in,
                 ],
                 stdout=subprocess.PIPE,
+                check=False,
             )
             .stdout.decode("utf-8")
             .replace('"', "")
@@ -93,25 +98,27 @@ class FFmpeg(object):
         generate the video output
         """
         idx_last_part = len(self.parts) - 1
-        with open(self.file_list, "a") as fp:
+        with open(self.file_list, "a") as file_list:
             for idx_part, part in enumerate(self.parts):
                 idx_last_audio = len(part["audios"]) - 1
                 file_image = part["image"]
                 for idx_audio, audio in enumerate(part["audios"]):
-                    if idx_part == idx_last_part and idx_audio == idx_last_audio:
-                        pass
+                    if idx_part == idx_last_part:
+                        if idx_audio == idx_last_audio:
+                            pass
                     output = f"{idx_part}-{idx_audio}.mp4"
                     self.generate_mov(
                         file_image,
                         audio,
                         output,
                     )
-                    print(f"file '{output}'", file=fp)
+                    print(f"file '{output}'", file=file_list)
         self.concat_videos(file_output)
         print(f"========= path: {self.path}")
         shutil.rmtree(self.path)
 
     def generate_mov(self, file_image, audio, file_output):
+        """generate mov using an image and a audio"""
         output = os.path.join(self.path, file_output)
         cmd = [
             "ffmpeg",
@@ -134,6 +141,7 @@ class FFmpeg(object):
         subprocess.call(cmd, shell=False)
 
     def concat_videos(self, file_output):
+        """concat multiple videos"""
         cmd = [
             "ffmpeg",
             "-loglevel",
@@ -151,6 +159,7 @@ class FFmpeg(object):
 
 
 def main():
+    """main"""
     ffmpeg = FFmpeg()
     ffmpeg.add_cover("./zoo.png")
     ffmpeg.add_image("./above.png")
